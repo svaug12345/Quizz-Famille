@@ -1,0 +1,88 @@
+// =============================================================================
+// firestore.rules — Les règles de sécurité de la base de données
+// -----------------------------------------------------------------------------
+// Ce sont ELLES qui empêchent de tricher : même en bidouillant l'appli,
+// personne ne peut lire une question tant que la boîte n'est pas ouverte.
+//
+// À coller dans la console Firebase → Firestore Database → onglet « Règles »
+// (ou à déployer avec : firebase deploy --only firestore:rules)
+// =============================================================================
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Petites fonctions réutilisées plus bas -----------------------------------
+    function signedIn() {
+      return request.auth != null;
+    }
+    // Ce téléphone a-t-il rejoint ce voyage ?
+    function isMember(trip) {
+      return signedIn() && request.auth.uid in trip.data.memberUids;
+    }
+    function tripDoc(code) {
+      return get(/databases/$(database)/documents/trips/$(code));
+    }
+    // Seuls ces champs ont été modifiés ?
+    function onlyChanges(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    // --- Les voyages -----------------------------------------------------------
+    match /trips/{code} {
+      // Lire un voyage précis : il suffit de connaître son code (pour le rejoindre).
+      allow get: if signedIn();
+      // Lister des voyages : uniquement ceux qu'on a rejoints.
+      allow list: if signedIn() && request.auth.uid in resource.data.memberUids;
+
+      // Créer : on doit s'inscrire soi-même comme membre, boîte fermée, 0 question.
+      allow create: if signedIn()
+        && request.resource.data.code == code
+        && request.resource.data.memberUids == [request.auth.uid]
+        && request.resource.data.status == 'collecte'
+        && request.resource.data.questionCount == 0;
+
+      // Rejoindre : on ne peut QUE s'ajouter soi-même à memberUids.
+      allow update: if signedIn()
+        && onlyChanges(['memberUids'])
+        && request.resource.data.memberUids.hasAll(resource.data.memberUids)
+        && request.resource.data.memberUids.removeAll(resource.data.memberUids)
+             .hasOnly([request.auth.uid]);
+
+      // Membre, boîte fermée : ajouter des profils, compter les questions, ouvrir la boîte.
+      allow update: if isMember(resource)
+        && resource.data.status == 'collecte'
+        && onlyChanges(['profiles', 'questionCount', 'countByAuthor', 'status'])
+        && request.resource.data.status in ['collecte', 'quiz'];
+
+      // Membre, boîte ouverte : enregistrer les scores (une partie jouée).
+      allow update: if isMember(resource)
+        && resource.data.status != 'collecte'
+        && onlyChanges(['results', 'status', 'profiles'])
+        && request.resource.data.status == 'termine';
+
+      // --- Les questions (les souvenirs) ----------------------------------------
+      match /questions/{questionId} {
+        // 🔒 LA règle clé : lecture seulement une fois la boîte ouverte.
+        allow read: if isMember(tripDoc(code))
+          && tripDoc(code).data.status != 'collecte';
+
+        // Déposer : membre, boîte encore fermée, id cohérent.
+        allow create: if isMember(tripDoc(code))
+          && tripDoc(code).data.status == 'collecte'
+          && request.resource.data.id == questionId
+          && request.resource.data.uid == request.auth.uid;
+
+        // « ANNULER » : seulement par le téléphone qui a déposé,
+        // pendant 2 minutes, boîte fermée.
+        allow delete: if isMember(tripDoc(code))
+          && resource.data.uid == request.auth.uid
+          && tripDoc(code).data.status == 'collecte'
+          && request.time.toMillis() < resource.data.createdAt + 120000;
+
+        // Personne ne modifie une question déposée.
+        allow update: if false;
+      }
+    }
+  }
+}

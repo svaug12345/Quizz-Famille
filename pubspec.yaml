@@ -1,0 +1,44 @@
+# =============================================================================
+# pubspec.yaml — La carte d'identité du projet Flutter
+# -----------------------------------------------------------------------------
+# version: 0.1.0+1
+#   0.1.0 = numéro lisible (à augmenter à chaque mise à jour, comme kAppVersion
+#           dans lib/main.dart)
+#   +1    = numéro de build pour le Play Store (à augmenter à chaque envoi)
+# =============================================================================
+
+name: quiz_vacances
+description: "Quiz'Vacances — le quiz famille des souvenirs de vacances (marque SV)."
+publish_to: 'none'
+
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.8.0
+
+# Les paquets utilisés. « any » = la version la plus récente compatible ;
+# le fichier pubspec.lock (créé au premier « flutter pub get ») fige ensuite
+# les versions exactes, pour que le projet se recompile toujours pareil.
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase : partage entre téléphones
+  firebase_core: any       # le socle
+  firebase_auth: any       # connexion anonyme (un identifiant par téléphone)
+  cloud_firestore: any     # la base de données (voyages, questions et photos)
+
+  # Le reste
+  shared_preferences: any  # mémoire locale du téléphone
+  google_fonts: any        # polices de la charte SV (Manrope, JetBrains Mono)
+  flutter_svg: any         # le logo SV (le geste) en vectoriel
+  image_picker: any        # prendre / choisir une photo
+  qr_flutter: any          # afficher le QR code d'invitation
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: any
+
+flutter:
+  uses-material-design: true
