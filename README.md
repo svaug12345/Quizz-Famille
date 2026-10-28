@@ -2,7 +2,7 @@
 
 Le quiz famille des souvenirs de vacances. Pendant le séjour, chacun glisse ses questions dans une « boîte » scellée ; au retour, la boîte s'ouvre et on joue tous ensemble, en se passant le téléphone.
 
-Version **0.1.0** · Flutter (Android + web) · charte **SV**
+Version **0.1.1** · Flutter (Android + web) · charte **SV**
 
 ---
 
@@ -21,28 +21,26 @@ Version **0.1.0** · Flutter (Android + web) · charte **SV**
 
 ## 1. Lancer le projet (mode démo)
 
-Le dossier ne contient que le code (`lib/`) et la configuration. Les dossiers `android/` et `web/` se génèrent avec Flutter :
+Les dossiers `android/` et `web/` sont déjà dans le dépôt (générés par `flutter create`, libellé « Quiz’Vacances » déjà en place) :
 
 ```bash
 cd Bureau\Projets\android
 git clone https://github.com/svaug12345/quizz-famille
 cd quizz-famille
-flutter create --org com.svaug --project-name quiz_vacances --platforms android,web .
 flutter pub get
-flutter run
+flutter run -d chrome
 ```
-
-`flutter create .` complète le projet sans toucher aux fichiers existants.
 
 Sans Firebase, l'appli démarre en **mode démo** (bandeau en haut de l'accueil) : tout fonctionne, mais sur un seul téléphone.
 
-Dans `android/app/src/main/AndroidManifest.xml`, remplace le libellé par :
+Vérifier le code et lancer les tests automatiques :
 
-```xml
-android:label="Quiz’Vacances"
+```bash
+flutter analyze
+flutter test
 ```
 
-(avec l'apostrophe typographique `’`, l'apostrophe droite poserait problème dans le XML).
+(Dans les libellés `android:label` et `web/manifest.json`, on utilise l'apostrophe typographique `’` : l'apostrophe droite poserait problème dans le XML.)
 
 ---
 

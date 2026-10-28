@@ -89,7 +89,7 @@ class SvColors extends ThemeExtension<SvColors> {
   SvColors lerp(SvColors? other, double t) => t < 0.5 ? this : (other ?? this);
 }
 
-/// Raccourci : context.sv.teal au lieu de Theme.of(context).extension<SvColors>()!.teal
+/// Raccourci : `context.sv.teal` au lieu de `Theme.of(context).extension<SvColors>()!.teal`
 extension SvContext on BuildContext {
   SvColors get sv => Theme.of(this).extension<SvColors>()!;
 }

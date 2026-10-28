@@ -270,6 +270,11 @@ class _CollectView extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 8),
+        // Depuis Flutter 3.29, un SnackBar qui a un bouton (ici ANNULER) reste
+        // affiché pour toujours par défaut : la durée ci-dessus est ignorée.
+        // Il cachait alors le bouton « OUVRIR LA BOÎTE ». persist: false
+        // rétablit la disparition automatique au bout des 8 secondes.
+        persist: false,
         content: const Text('Souvenir scellé dans la boîte 🔒'),
         action: SnackBarAction(
           label: 'ANNULER',

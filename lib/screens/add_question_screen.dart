@@ -8,7 +8,6 @@
 // (sauf « ANNULER » dans les secondes qui suivent).
 // =============================================================================
 
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

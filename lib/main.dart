@@ -22,7 +22,7 @@ import 'widgets/common.dart';
 
 /// Numéro de version affiché dans l'appli.
 /// ⚠️ À augmenter à chaque mise à jour, en même temps que « version: » dans pubspec.yaml.
-const kAppVersion = '0.1.0';
+const kAppVersion = '0.1.1';
 
 Future<void> main() async {
   // Obligatoire avant tout appel « natif » (préférences, Firebase…) avant runApp.

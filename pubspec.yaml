@@ -11,7 +11,7 @@ name: quiz_vacances
 description: "Quiz'Vacances — le quiz famille des souvenirs de vacances (marque SV)."
 publish_to: 'none'
 
-version: 0.1.0+1
+version: 0.1.1+2
 
 environment:
   sdk: ^3.8.0
@@ -30,7 +30,12 @@ dependencies:
 
   # Le reste
   shared_preferences: any  # mémoire locale du téléphone
-  google_fonts: any        # polices de la charte SV (Manrope, JetBrains Mono)
+  # Polices de la charte SV (Manrope, JetBrains Mono).
+  # ^8.0.0 et pas « any » : la 9.0 passe par le nouveau paquet material_ui,
+  # dont le TextTheme n'est pas le même que celui de package:flutter/material.dart
+  # → erreur « TextTheme can't be assigned to TextTheme? » dans sv_theme.dart.
+  # À réessayer le jour où Flutter aura lui-même basculé sur material_ui.
+  google_fonts: ^8.0.0
   flutter_svg: any         # le logo SV (le geste) en vectoriel
   image_picker: any        # prendre / choisir une photo
   qr_flutter: any          # afficher le QR code d'invitation

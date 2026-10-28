@@ -4,10 +4,9 @@ Appli Flutter (Android + web) de Sébastien : quiz famille sur les souvenirs de 
 
 ## État du projet
 
-- v0.1.0 écrite dans une session claude.ai **sans compilateur** (pub.dev inaccessible) : jamais passée par `flutter analyze`.
-- Les dossiers `android/` et `web/` n'existent pas encore. Les générer avec :
-  `flutter create --org com.svaug --project-name quiz_vacances --platforms android,web .`
-- Point d'API incertain : `AppBarThemeData` / `InputDecorationThemeData` dans `lib/theme/sv_theme.dart` (revenir à `AppBarTheme` / `InputDecorationTheme` si l'analyseur les refuse).
+- v0.1.1 : `android/` et `web/` générés, `flutter analyze` sans aucun problème, `flutter test` OK, parcours complet testé dans Chrome en mode démo (Flutter 3.47).
+- `google_fonts` est épinglé en `^8.0.0` : la 9.0 passe par le paquet `material_ui`, dont le `TextTheme` est incompatible avec celui de `package:flutter/material.dart`.
+- Lancer en web : `flutter run -d chrome` (ou `-d web-server --web-port 8080 --release` ; le mode debug en web-server reste bloqué en attente du débogueur).
 - Firebase pas encore branché : `lib/firebase_options.dart` est un fichier provisoire → l'appli tourne en mode démo (un seul téléphone).
 
 ## Conventions (à respecter à chaque modification)
